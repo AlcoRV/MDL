@@ -4,8 +4,15 @@ using System.Net;
 
 namespace MDL.Tools
 {
-    public class MailManager
+    /// <summary>
+    ///     Менеджер работы с сообщениями
+    /// </summary>
+    public sealed class MailManager
     {
+        /// <summary>
+        ///     Метод рассылки писем
+        /// </summary>
+        /// <param name="mail">Общее сообщение</param>
         public void SendMessages(Mail mail)
         {
             try
@@ -16,10 +23,10 @@ namespace MDL.Tools
                     SendMessage(mail.Subject, mail.Body, recipient);
                 }
 
-                mail.Result = "OK";
+                mail.Result = CommonConstants.Mail.ResultOK;
             }
             catch(Exception e) {
-                mail.Result = "Failed";
+                mail.Result = CommonConstants.Mail.ResultFailed;
                 mail.FailedMessage = e.Message;
             }
         }
