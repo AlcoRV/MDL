@@ -1,4 +1,5 @@
 ﻿using MDL.Models;
+using MDL.ViewModels;
 using Newtonsoft.Json;
 
 namespace MDL.Tools
@@ -17,6 +18,26 @@ namespace MDL.Tools
         {
             var recipients = JsonConvert.DeserializeObject<string[]>(mail.Recipients);
             return recipients;
+        }
+
+        /// <summary>
+        ///     Метод расширения преобразования модели почтового сообщения в модель представления
+        /// </summary>
+        /// <param name="mail">Сообщение</param>
+        /// <returns></returns>
+        public static MailViewModel ToMailViewModel(this Mail mail)
+        {
+            var viewModel = new MailViewModel()
+            {
+                Id = mail.Id,
+                Subject = mail.Subject,
+                Body = mail.Body,
+                Recipients = mail.Recipients,
+                Date = mail.Date,
+                Result = mail.Result == CommonConstants.Mail.Result.OK ? CommonConstants.Mail.ResultOK : CommonConstants.Mail.ResultFailed,
+                FailedMessage = mail.FailedMessage
+            };
+            return viewModel;
         }
     }
 }
