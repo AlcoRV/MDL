@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static MDL.Tools.CommonConstants.Mail;
 
 namespace MDL.Models
 {
@@ -36,13 +37,12 @@ namespace MDL.Models
         /// <summary>
         ///     Результат отправки сообщений
         /// </summary>
-        [StringLength(10)]
-        public string? Result { get; set; }
+        public Result Result { get; set; }
 
         /// <summary>
         ///     Текст ошибки
         /// </summary>
         [StringLength(100)]
-        public string? FailedMessage { get; set; }
+        public string FailedMessage { get; set; } = string.Empty;
     }
 }

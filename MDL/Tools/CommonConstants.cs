@@ -11,6 +11,21 @@
         public static class Mail
         {
             /// <summary>
+            ///     Результаты рассылок писем
+            /// </summary>
+            public enum Result
+            {
+                /// <summary>
+                ///     С ошибкой (значение по-умолчанию)
+                /// </summary>
+                Failed,
+                /// <summary>
+                ///     Успешно
+                /// </summary>
+                OK
+            }
+
+            /// <summary>
             ///     Рассылка писем прошла успешно
             /// </summary>
             public const string ResultOK = "OK";
