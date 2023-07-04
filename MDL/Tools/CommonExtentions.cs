@@ -24,7 +24,7 @@ namespace MDL.Tools
         ///     Метод расширения преобразования модели почтового сообщения в модель представления
         /// </summary>
         /// <param name="mail">Сообщение</param>
-        /// <returns></returns>
+        /// <returns>Модель представления</returns>
         public static MailViewModel ToMailViewModel(this Mail mail)
         {
             var viewModel = new MailViewModel()

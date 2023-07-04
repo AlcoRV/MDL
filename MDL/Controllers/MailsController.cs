@@ -20,6 +20,7 @@ namespace MDL.Controllers
         ///     Конструктор почтового контроллера
         /// </summary>
         /// <param name="mailRepository">Репозиторий с сообщениями</param>
+        /// <param name="mailManager">Менеджер рассылки писем</param>
         public MailsController(IRepository<Mail> mailRepository, IMailManager mailManager)
         {
             _mailRepository = mailRepository;
