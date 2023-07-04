@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MDL.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Initail : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,8 +20,8 @@ namespace MDL.Migrations
                     Subject = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Recipients = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Result = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    FailedMessage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Result = table.Column<int>(type: "int", nullable: false),
+                    FailedMessage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
