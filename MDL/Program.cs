@@ -1,7 +1,9 @@
-using MDL;
+using MDL.DB;
 using MDL.Interfaces;
 using MDL.Models;
+using MDL.Options;
 using MDL.Repositories;
+using MDL.Tools;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,9 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<MDLContext>(option => option.UseSqlServer(connection));
 builder.Services.AddTransient<IRepository<Mail>, MailRepository>();
+builder.Services.AddTransient<IMailManager, MailManager>();
+
+builder.Services.Configure<SmtpServerOptions>(builder.Configuration.GetSection(SmtpServerOptions.SmtpServer));
 
 var app = builder.Build();
 
