@@ -1,14 +1,35 @@
 ﻿using MDL.Models;
 using System.Net.Mail;
 using System.Net;
+using MDL.Interfaces;
+using MDL.Options;
+using Microsoft.Extensions.Options;
 
 namespace MDL.Tools
 {
     /// <summary>
     ///     Менеджер работы с сообщениями
     /// </summary>
-    public sealed class MailManager
+    public sealed class MailManager: IMailManager
     {
+        private readonly SmtpServerOptions _options;
+        private readonly SmtpClient _smtp;
+
+        /// <summary>
+        ///     Конструктор почтового менеджера
+        /// </summary>
+        /// <param name="options">Настройки конфигурации</param>
+        public MailManager(IOptions<SmtpServerOptions> options)
+        {
+            _options = options.Value;
+
+            _smtp = new SmtpClient(_options.Client)
+            {
+                Credentials = new NetworkCredential(_options.Address, _options.Password),
+                EnableSsl = true
+            };
+        }
+
         /// <summary>
         ///     Метод рассылки писем
         /// </summary>
@@ -23,25 +44,17 @@ namespace MDL.Tools
                     SendMessage(mail.Subject, mail.Body, recipient);
                 }
 
-                mail.Result = CommonConstants.Mail.ResultOK;
+                mail.Result = CommonConstants.Mail.Result.OK;
             }
             catch(Exception e) {
-                mail.Result = CommonConstants.Mail.ResultFailed;
+                mail.Result = CommonConstants.Mail.Result.Failed;
                 mail.FailedMessage = e.Message;
             }
         }
 
-        private static void SendMessage(string subject, string body, string recipient)
+        private void SendMessage(string subject, string body, string recipient)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .Build();
-
-            var serverAddress = configuration["SMTPServer:Address"];
-            var serverName = configuration["SMTPServer:Name"];
-            if (serverAddress is null) { throw new NullReferenceException("Not correct server's address!"); }
-
-            var from = new MailAddress(serverAddress, serverName);
+            var from = new MailAddress(_options.Address, _options.Name);
 
             var to = new MailAddress(recipient);
 
@@ -53,12 +66,7 @@ namespace MDL.Tools
                 IsBodyHtml = true
             };
 
-            var smtp = new SmtpClient(configuration["SMTPServer:Client"])
-            {
-                Credentials = new NetworkCredential(serverAddress, configuration["SMTPServer:Password"]),
-                EnableSsl = true
-            };
-            smtp.Send(message);
+            _smtp.Send(message);
         }
     }
 }
