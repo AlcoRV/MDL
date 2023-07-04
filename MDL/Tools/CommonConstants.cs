@@ -16,13 +16,13 @@
             public enum Result
             {
                 /// <summary>
-                ///     С ошибкой (значение по-умолчанию)
-                /// </summary>
-                Failed,
-                /// <summary>
                 ///     Успешно
                 /// </summary>
-                OK
+                OK,
+                /// <summary>
+                ///     С ошибкой
+                /// </summary>
+                Failed
             }
 
             /// <summary>

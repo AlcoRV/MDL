@@ -47,7 +47,6 @@ namespace MDL.Tools
                 mail.Result = CommonConstants.Mail.Result.OK;
             }
             catch(Exception e) {
-                mail.Result = CommonConstants.Mail.Result.Failed;
                 mail.FailedMessage = e.Message;
             }
         }

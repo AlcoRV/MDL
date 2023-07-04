@@ -37,7 +37,7 @@ namespace MDL.Models
         /// <summary>
         ///     Результат отправки сообщений
         /// </summary>
-        public Result Result { get; set; }
+        public Result Result { get; set; } = Result.Failed;
 
         /// <summary>
         ///     Текст ошибки
