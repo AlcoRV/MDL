@@ -1,12 +1,12 @@
 ﻿using MDL.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MDL
+namespace MDL.DB
 {
     /// <summary>
     ///     Контекст БД почтовых сообщений
     /// </summary>
-    public sealed class MDLContext: DbContext
+    public sealed class MDLContext : DbContext
     {
         /// <summary>
         ///     Конструктор контекста
