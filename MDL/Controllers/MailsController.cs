@@ -1,6 +1,7 @@
 ﻿using MDL.Interfaces;
 using MDL.Models;
 using MDL.Tools;
+using MDL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MDL.Controllers
@@ -13,14 +14,16 @@ namespace MDL.Controllers
     public sealed class MailsController : ControllerBase
     {
         private readonly IRepository<Mail> _mailRepository;
+        private readonly IMailManager _mailManager;
 
         /// <summary>
         ///     Конструктор почтового контроллера
         /// </summary>
         /// <param name="mailRepository">Репозиторий с сообщениями</param>
-        public MailsController(IRepository<Mail> mailRepository)
+        public MailsController(IRepository<Mail> mailRepository, IMailManager mailManager)
         {
             _mailRepository = mailRepository;
+            _mailManager = mailManager;
         }
 
         /// <summary>
@@ -28,31 +31,37 @@ namespace MDL.Controllers
         /// </summary>
         /// <returns>Перечень сообщений, отсортированный по дате</returns>
         [HttpGet(Name = "GetMails")]
-        public IEnumerable<Mail> Get()
+        public IEnumerable<MailViewModel> Get()
         {
-            return _mailRepository.All.OrderByDescending(it => it.Date);
+            return _mailRepository.All.Select(it => it.ToMailViewModel()).OrderByDescending(it => it.Date);
         }
 
         /// <summary>
         ///     Post-метод, отправляющий сообщения и складирующий каждую попытку отправки сообщений в БД
         /// </summary>
-        /// <param name="mail">Сообщение</param>
+        /// <param name="mailViewModel">Сообщение</param>
         /// <returns>Статус HTTP-запроса</returns>
         [HttpPost(Name = "PostMails")]
-        public StatusCodeResult Post(Mail mail)
+        public StatusCodeResult Post(MailViewModel mailViewModel)
         {
-            if(mail == null || string.IsNullOrEmpty(mail.Subject) || string.IsNullOrEmpty(mail.Body) || mail.Recipients == null) {
-                mail.Result = CommonConstants.Mail.ResultFailed;
+            var mail = new Mail()
+            {
+                Subject = mailViewModel.Subject ?? string.Empty,
+                Body = mailViewModel.Body ?? string.Empty,
+                Recipients = mailViewModel.Recipients ?? string.Empty
+            };
+
+            if (mailViewModel == null || string.IsNullOrEmpty(mailViewModel.Subject?.Trim()) || string.IsNullOrEmpty(mailViewModel.Body?.Trim()) || string.IsNullOrEmpty(mailViewModel.Recipients?.Trim())) {
                 mail.FailedMessage = CommonConstants.Mail.NotEnoughDataError; 
             }
             else
             {
-                new MailManager().SendMessages(mail);
+                _mailManager.SendMessages(mail);
             }
 
             _mailRepository.Add(mail);
 
-            if(mail.Result.Equals(CommonConstants.Mail.ResultOK))
+            if(mail.Result == CommonConstants.Mail.Result.OK)
             {
                 return Ok();
             }
